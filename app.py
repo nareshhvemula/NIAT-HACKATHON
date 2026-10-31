@@ -1,205 +1,229 @@
 import streamlit as st
 import streamlit.components.v1 as components
-import requests
 from groq import Groq
+import requests
 
-# ==========================================
-# 1. PAGE CONFIGURATION & CYBERPUNK THEME
-# ==========================================
+# 1. Page Configuration & Cyberpunk Theme Injection
 st.set_page_config(
-    page_title="NEO REPO AUDITOR 3D",
-    page_icon="🎛️",
+    page_title="NEO-REPO AUDITOR 3D", 
+    page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Deep Space Cyberpunk Matrix Injections
+# Futuristic Neon CSS Styling & Swipe Card Animations
 st.markdown("""
     <style>
+    /* Neon Glow & Tech Themes */
     .stApp {
-        background-color: #060713;
-        color: #00ffcc;
-        font-family: 'Courier New', Courier, monospace;
+        background-color: #0d0e15;
+        color: #e2e8f0;
     }
     
-    /* Glowing Neon Glassmorphism Input Cards */
-    div.stTextArea textarea {
-        background-color: #0b0d1f !important;
-        color: #39ff14 !important;
-        border: 1px solid #00ffcc !important;
-        box-shadow: 0 0 10px rgba(0, 255, 204, 0.2);
-    }
-
-    /* Swipe-Animated Execution Button */
+    /* Futuristic Code Audit Action Card with Swipe Hover Effect */
     div.stButton > button {
-        background: linear-gradient(135deg, #00ffcc #39ff14);
-        color: #060713 !important;
+        background: linear-gradient(90deg, #8b5cf6, #ec4899);
+        color: white !important;
         border: none;
-        border-radius: 4px;
-        padding: 14px 28px;
+        padding: 12px 24px;
         font-weight: bold;
+        border-radius: 8px;
+        text-transform: uppercase;
         letter-spacing: 2px;
-        box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);
-        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        transition: all 0.4s ease;
+        box-shadow: 0 0 15px rgba(139, 92, 246, 0.4);
+        position: relative;
+        overflow: hidden;
+        width: 100%;
     }
     
     div.stButton > button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 0 30px rgba(57, 255, 20, 0.8);
-        color: #ffffff !important;
+        transform: translateY(-2px);
+        box-shadow: 0 0 25px rgba(236, 72, 153, 0.7);
+        background: linear-gradient(90deg, #ec4899, #8b5cf6);
     }
     
-    section[data-testid="stSidebar"] {
-        background-color: #090a16;
-        border-right: 1px solid #00ffcc;
+    /* Tech Container Panel Styling */
+    .tech-card {
+        background: rgba(30, 41, 59, 0.5);
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        padding: 20px;
+        border-radius: 12px;
+        backdrop-filter: blur(10px);
+        margin-bottom: 20px;
     }
     </style>
 """, unsafe_allow_html=True)
 
-# ==========================================
-# 2. SIDEBAR UTILITIES & LLM SCHEDULER
-# ==========================================
-st.sidebar.title("🛸 CYBER PIPELINE")
-st.sidebar.markdown("---")
+# 2. Interactive Three.js 3D Particle Nexus Header
+three_js_canvas = """
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cloudflare.com"></script>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #0d0e15; }
+        canvas { display: block; width: 100vw; height: 160px; }
+    </style>
+</head>
+<body>
+    <div id="canvas-container"></div>
+    <script>
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / 160, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, 160);
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-api_key = st.sidebar.text_input("Groq Security Gateway Key", type="password", placeholder="gsk_...")
-llm_engine = st.sidebar.selectbox(
-    "LLM Architecture Node", 
-    ["Local Gemma3 (Ollama Offline)", "openai/gpt-oss-120b", "llama3-8b-8192", "mixtral-8x7b-32768"]
-)
+        const geometry = new THREE.BufferGeometry();
+        const vertices = [];
+        for (let i = 0; i < 400; i++) {
+            vertices.push(Math.random() * 40 - 20); // X
+            vertices.push(Math.random() * 10 - 5);   // Y
+            vertices.push(Math.random() * 20 - 10);  // Z
+        }
+        geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(vertices), 3));
+        
+        const material = new THREE.PointsMaterial({ color: 0x8b5cf6, size: 0.15, transparent: true, opacity: 0.8 });
+        const particles = new THREE.Points(geometry, material);
+        scene.add(particles);
+        camera.position.z = 8;
 
-st.sidebar.markdown("---")
-st.sidebar.caption("System Framework: Node fully linked to local hardware topology.")
+        let clock = 0;
+        function animate() {
+            requestAnimationFrame(animate);
+            clock += 0.01;
+            particles.rotation.y = clock * 0.1;
+            particles.rotation.x = Math.sin(clock * 0.2) * 0.1;
+            renderer.render(scene, camera);
+        }
+        animate();
 
-# ==========================================
-# 3. INTERACTIVE 3D THREE.JS CANVAS INJECTION
-# ==========================================
-st.title("🛡️ NEO REPO AUDITOR 3D")
-st.subheader("Autonomous Three.js / Cryptographic Code Scan Matrix")
-
-# 3D Node Grid Canvas Injection mirroring CyberGuard 3D architecture layout
-three_js_cyber_matrix = """
-<div id="three-canvas-container" style="width: 100%; height: 300px; background: #03040a; border-radius: 8px; border: 1px solid #00ffcc; position: relative; overflow: hidden;">
-    <div id="matrix-webgl" style="width: 100%; height: 100%;"></div>
-    <div style="position: absolute; top: 15px; left: 15px; font-family: monospace; color: #39ff14; font-size: 11px; text-shadow: 0 0 5px #39ff14;">
-        ⚡ GRAPHICS CORE: RTX 3050 TARGET ACTIVE // FRAME RATE: 60FPS STABLE //
-    </div>
-</div>
-
-<script src="https://cloudflare.com"></script>
-<script>
-    // Initializing Three.js 3D Particle Cloud Net Matrix
-    const container = document.getElementById('matrix-webgl');
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(60, container.clientWidth / 300, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    
-    renderer.setSize(container.clientWidth, 300);
-    container.appendChild(renderer.domElement);
-    
-    // Generating Network Nodes (Particle Matrix)
-    const particleCount = 250;
-    const geometry = new THREE.BufferGeometry();
-    const positions = new Float32Array(particleCount * 3);
-    
-    for(let i=0; i<particleCount*3; i+=3) {
-        positions[i] = (Math.random() - 0.5) * 40;     // X axis range
-        positions[i+1] = (Math.random() - 0.5) * 15;   // Y axis range
-        positions[i+2] = (Math.random() - 0.5) * 20;   // Z axis range
-    }
-    
-    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    
-    const material = new THREE.PointsMaterial({
-        color: 0x00ffcc,
-        size: 0.18,
-        transparent: true,
-        opacity: 0.85
-    });
-    
-    const pointCloud = new THREE.Points(geometry, material);
-    scene.add(pointCloud);
-    camera.position.z = 18;
-
-    // Animation Loop handling live orbital rotational tracking
-    function animate() {
-        requestAnimationFrame(animate);
-        pointCloud.rotation.y += 0.002;
-        pointCloud.rotation.x += 0.001;
-        renderer.render(scene, camera);
-    }
-    
-    // Dynamic aspect resizing boundary
-    window.addEventListener('resize', () => {
-        camera.aspect = container.clientWidth / 300;
-        camera.updateProjectionMatrix();
-        renderer.setSize(container.clientWidth, 300);
-    });
-    
-    animate();
-</script>
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / 160;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, 160);
+        });
+    </script>
+</body>
+</html>
 """
-components.html(three_js_cyber_matrix, height=315)
 
-# ==========================================
-# 4. SPLIT GRID CONTROLLER INTERFACE
-# ==========================================
-left_node, right_node = st.columns(2)
+# Render the 3D visual component at the header banner spot
+components.html(three_js_canvas, height=160, scrolling=False)
 
-with left_node:
-    st.markdown("### 📥 Code Segment Target Node")
-    code_segment = st.text_area(
-        "Deploy source snippet string context for execution checks:", 
-        height=320, 
-        placeholder="def shield_matrix():\n    pass"
+st.title("⚡ NEO-REPO AUDITOR 3D")
+st.caption("Quantum Static Multi-Agent Verification Platform")
+st.markdown("---")
+
+# 3. Sidebar Configuration Console
+st.sidebar.header("🌌 Core Matrix")
+api_key = st.sidebar.text_input("Access Authorization Key:", type="password", help="Groq API Token")
+
+with st.sidebar.expander("🔮 Model Architectures", expanded=True):
+    model_choice = st.selectbox(
+        "Select LLM Node Engine:", 
+        ["Local Gemma (Ollama Offline)", "openai/gpt-oss-120b", "llama-3.3-70b-versatile", "llama3-70b-8192", "mixtral-8x8b-32768"]
     )
-    execute_sequence = st.button("RUN COMPLIANCE PROTOCOL")
+    temperature = st.slider("Quantum Randomness Variance:", 0.0, 1.0, 0.2)
 
-with right_node:
-    st.markdown("### 📊 Compliance Threat Report Vector")
-    
-    if execute_sequence:
-        if not code_segment.strip():
-            st.error("❌ Action terminated: Code target node data missing.")
-        else:
-            with st.spinner("Analyzing parameters across cryptographic validation layers..."):
-                
-                # PIPELINE NODE 1: LOCAL OFFLINE LLM EXECUTION LAYER
-                if llm_engine == "Local Gemma3 (Ollama Offline)":
-                    try:
-                        res = requests.post(
-                            "http://localhost:11434/api/generate",
-                            json={
-                                "model": "gemma3:1b",
-                                "prompt": f"Audit this code snippet for security threats, runtime bugs, and anti-patterns. Provide output inside a clean structured markdown table report:\n\n{code_segment}",
-                                "stream": False
-                            },
-                            timeout=30
-                        )
-                        if res.status_code == 200:
-                            st.success("🤖 Core Analysis Complete: Processed locally inside isolated GPU cluster.")
-                            st.markdown(res.json().get("response"))
-                        else:
-                            st.error(f"Engine failure code: {res.status_code}")
-                    except Exception as e:
-                        st.error(f"Local link failed. Confirm background daemon runtime status. Context: {e}")
-                
-                # PIPELINE NODE 2: EXTERNAL CLOUD NETWORK CONNECTOR
-                else:
-                    if not api_key:
-                        st.warning("🔒 Target selected requires a valid Groq Cloud Security Gateway validation string key.")
-                    else:
-                        try:
-                            mapped_id = "llama3-8b-8192" if "llama3" in llm_engine else "mixtral-8x7b-32768"
-                            client = Groq(api_key=api_key)
-                            completion = client.chat.completions.create(
-                                model=mapped_id,
-                                messages=[{"role": "user", "content": f"Audit this code for vulnerabilities:\n\n{code_segment}"}],
-                                temperature=0.2
-                            )
-                            st.success(f"⚡ Cloud Query Resolved via: {mapped_id}")
-                            st.markdown(completion.choices.message.content)
-                        except Exception as e:
-                            st.error(f"Gateway execution failure: {e}")
+# 4. Source Matrix Workspace Panel
+st.subheader("📥 Data Buffer Upload Matrix")
+input_mode = st.radio("Choose Input Matrix Format:", ["Raw Text Stream Injection", "Direct Core Local File Transmission"], horizontal=True)
+
+code_input = ""
+if input_mode == "Raw Text Stream Injection":
+    code_input = st.text_area(
+        "Paste target source string block inside this terminal frame:", 
+        height=250, 
+        placeholder="// Insert code architecture array vectors...",
+        key="custom_code_area"
+    )
+else:
+    uploaded_file = st.file_uploader("Inject code segment manifest directly:", type=["py", "js", "ts", "go"])
+    if uploaded_file:
+        code_input = uploaded_file.read().decode("utf-8")
+        st.success(f"File verification vector complete: {uploaded_file.name}")
+
+st.markdown("---")
+
+# 5. Core Trigger Action Loop
+if st.button("🚀 INITIATE QUANTUM ARCHITECTURE AUDIT"):
+    # Only validate the Groq API key if we aren't using the local offline model
+    if model_choice != "Local Gemma (Ollama Offline)" and not api_key:
+        st.warning("🔒 Authorization Key vector missing. Please configure your token frame.")
+    elif not code_input.strip():
+        st.error("❌ Data stream buffer empty. Please feed valid script instructions.")
     else:
-        st.info("System idling in standby. Input raw package configuration array segments to trigger compilation analytics.")
+        progress_bar = st.progress(0)
+        status_text = st.empty()
+        
+        status_text.text("⚡ Synthesizing local environment instances...")
+        progress_bar.progress(30)
+        
+        system_prompt = (
+            "You are an expert senior software engineer and security auditor. "
+            "Analyze the provided code carefully. Provide feedback divided into three strict sections: "
+            "1. BUGS & LOGIC ERRORS, 2. SECURITY FLAWS, 3. OPTIMIZATION SUGGESTIONS. "
+            "Be direct, highly precise, and provide corrected code blocks where applicable."
+        )
+        
+        try:
+            # INTERACTIVE PIPELINE NODE A: LOCAL OFFLINE OLLAMA PROCESSING RUNTIME
+            if model_choice == "Local Gemma (Ollama Offline)":
+                status_text.text("🪐 Routing deep semantic inference internally to local Ollama core...")
+                progress_bar.progress(60)
+                
+                ollama_url = "http://localhost:11434/api/generate"
+                payload = {
+                    "model": "gemma3:1b",
+                    "system": system_prompt,
+                    "prompt": f"Review this code:\n\n```\n{code_input}\n```",
+                    "stream": False,
+                    "options": {
+                        "temperature": temperature
+                    }
+                }
+                
+                response = requests.post(ollama_url, json=payload, timeout=45)
+                if response.status_code == 200:
+                    report_out = response.json().get("response")
+                else:
+                    raise Exception(f"Local Ollama service responded with unexpected status code {response.status_code}")
+            
+            # INTERACTIVE PIPELINE NODE B: CLOUD-BASED GROQ RUNTIME GATEWAY
+            else:
+                status_text.text("🪐 Launching deep semantic inference engines via Groq matrix...")
+                progress_bar.progress(70)
+                
+                client = Groq(api_key=api_key)
+                response = client.chat.completions.create(
+                    model=model_choice,
+                    temperature=temperature,
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": f"Review this code:\n\n```\n{code_input}\n```"}
+                    ]
+                )
+                report_out = response.choices[0].message.content
+            
+            progress_bar.progress(100)
+            status_text.text("✅ Security verification sequence operational!")
+            
+            # 6. Tabbed Workspace Output Matrix
+            st.subheader("📊 Generated Metrics Framework")
+            res_tab1, res_tab2 = st.tabs(["⚡ Core Structural Analysis Ledger", "💾 Compile System Blueprint (.md)"])
+            
+            with res_tab1:
+                st.markdown(f'<div class="tech-card">{report_out}</div>', unsafe_allow_html=True)
+                
+            with res_tab2:
+                st.download_button(
+                    label="💾 TRANSMIT LOCAL ANALYSIS BUILD",
+                    data=report_out,
+                    file_name="quantum_audit_manifest.md",
+                    mime="text/markdown"
+                )
+                
+        except Exception as e:
+            st.error(f"💥 Kernel panic exception standard return: {e}")
